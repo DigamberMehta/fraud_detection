@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Glassmorphism Utility Classes */
+@layer components {
+  .glass {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  }
+  
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+  
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+  
+  .glass-card-hover:hover {
+    @apply bg-white/10 border-white/20;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    transform: translateY(-2px);
+  }
+  
+  .glass-button {
+    @apply backdrop-blur-md bg-white/10 border border-white/20 rounded-xl px-4 py-2;
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  .glass-button:hover {
+    @apply bg-white/20 border-white/30;
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.3);
+  }
+  
+  .glass-input {
+    @apply backdrop-blur-md bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .glass-input:focus {
+    @apply outline-none border-blue-500/50 bg-white/10;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .glass-sidebar {
+    @apply backdrop-blur-2xl bg-white/5 border-r border-white/10;
+    box-shadow: 4px 0 24px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .glass-navbar {
+    @apply backdrop-blur-2xl bg-[#12121A]/80 border-t border-white/10;
+    box-shadow: 0 -4px 24px 0 rgba(0, 0, 0, 0.3);
+  }
+  
+  .glass-modal {
+    @apply backdrop-blur-2xl bg-[#12121A]/95 border border-white/10 rounded-3xl;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+  
+  .glass-table {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .glass-badge {
+    @apply backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .glass-glow-blue {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.3), 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+  
+  .glass-glow-purple {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.3), 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+  
+  .glass-glow-green {
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.3), 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+  
+  .glass-glow-red {
+    box-shadow: 0 0 40px rgba(239, 68, 68, 0.3), 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+  
+  .glass-glow-orange {
+    box-shadow: 0 0 40px rgba(249, 115, 22, 0.3), 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+}
+
+/* Floating orb backgrounds for glassmorphism */
+.glass-bg-orbs::before,
+.glass-bg-orbs::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.glass-bg-orbs::before {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  top: -200px;
+  right: -100px;
+}
+
+.glass-bg-orbs::after {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%);
+  bottom: -100px;
+  left: -100px;
+}
+
+@keyframes pulse-red {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.pulse-red {
+  animation: pulse-red 2s infinite;
+}
+
+.shake {
+  animation: shake 0.5s;
+}
+
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: gradient 8s ease infinite;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar with glassmorphism */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  backdrop-filter: blur(10px);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Enhanced focus states */
+*:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(139, 92, 246, 0.4);
+  color: white;
+}
