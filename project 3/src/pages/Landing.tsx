@@ -185,13 +185,13 @@ export default function Landing() {
           {/* CTAs */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate("/customer")}
+              onClick={() => navigate("/auth/signup")}
               className="hidden sm:block text-sm text-gray-300 hover:text-white px-4 py-2 rounded-xl hover:bg-white/5 transition-all"
             >
               Sign In
             </button>
             <button
-              onClick={() => navigate("/customer")}
+              onClick={() => navigate("/auth/signup")}
               className="text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-5 py-2 rounded-xl transition-all hover:shadow-lg hover:shadow-blue-500/25"
             >
               Get Started
@@ -225,14 +225,14 @@ export default function Landing() {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
           <button
-            onClick={() => navigate("/customer")}
+            onClick={() => navigate("/auth/signup")}
             className="group flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-2xl transition-all hover:shadow-xl hover:shadow-blue-500/30 hover:scale-105"
           >
             Open a Free Account
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
           <button
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate("/auth/login")}
             className="group flex items-center gap-2 glass border border-white/10 hover:border-white/20 text-gray-300 hover:text-white font-semibold px-8 py-4 rounded-2xl transition-all hover:bg-white/10"
           >
             <BarChart3 className="w-5 h-5 text-purple-400" />
@@ -473,14 +473,14 @@ export default function Landing() {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
-            onClick={() => navigate("/customer")}
+            onClick={() => navigate("/auth/signup")}
             className="group flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-10 py-4 rounded-2xl transition-all hover:shadow-2xl hover:shadow-blue-500/30 hover:scale-105"
           >
             Start for Free
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
           <button
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate("/auth/login")}
             className="group flex items-center gap-2 glass border border-white/10 hover:border-white/20 hover:bg-white/10 text-gray-300 hover:text-white font-semibold px-10 py-4 rounded-2xl transition-all"
           >
             <CreditCard className="w-5 h-5 text-purple-400" />

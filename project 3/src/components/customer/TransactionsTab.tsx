@@ -1,43 +1,88 @@
-import { useState } from 'react';
-import { Download, AlertCircle, X, ShoppingBag, Utensils, Wallet, Film, Zap, CreditCard, Filter, Calendar, CheckCircle, Clock as ClockIcon, XCircle } from 'lucide-react';
-import { mockTransactions } from '../../data/mockData';
+import { useState, useEffect } from 'react';
+import {
+  Download, AlertCircle, X, ShoppingBag, Utensils, Wallet, Film,
+  Zap, CreditCard, Filter, Calendar, CheckCircle, Clock as ClockIcon,
+  XCircle, Loader2, AlertTriangle,
+} from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import API_BASE_URL from '../../config/api';
 
-type Filter = 'all' | 'card' | 'upi' | 'bankTransfer';
+type FilterType = 'all' | 'card' | 'upi' | 'bank_transfer';
+
+interface ApiTransaction {
+  _id: string;
+  amount: number;
+  currency: string;
+  status: 'completed' | 'pending' | 'blocked';
+  isFlagged: boolean;
+  paymentMethod: {
+    type: 'card' | 'upi' | 'bank_transfer';
+    card?: { last4: string; cardBrand?: string; bankName?: string };
+    upi?: { upiId: string; upiApp?: string };
+    bankTransfer?: { bankName?: string; transferType?: string; accountLast4?: string };
+  };
+  merchantId?: { name: string; category: string };
+  location?: { city?: string; country?: string };
+  createdAt: string;
+}
+
+function categoryIcon(cat: string) {
+  switch (cat) {
+    case 'Shopping': return <ShoppingBag className="w-6 h-6 text-pink-400" />;
+    case 'Food & Dining': return <Utensils className="w-6 h-6 text-orange-400" />;
+    case 'Income': return <Wallet className="w-6 h-6 text-green-400" />;
+    case 'Entertainment': return <Film className="w-6 h-6 text-purple-400" />;
+    case 'Utilities': return <Zap className="w-6 h-6 text-yellow-400" />;
+    default: return <CreditCard className="w-6 h-6 text-blue-400" />;
+  }
+}
+
+function paymentLabel(pm: ApiTransaction['paymentMethod']): string {
+  if (pm.type === 'card' && pm.card?.last4) return `•••• ${pm.card.last4}`;
+  if (pm.type === 'upi' && pm.upi?.upiId) return pm.upi.upiId;
+  if (pm.type === 'bank_transfer' && pm.bankTransfer)
+    return `${pm.bankTransfer.bankName ?? ''} ${pm.bankTransfer.transferType ?? ''}`.trim();
+  return pm.type.replace('_', ' ');
+}
+
+function groupByDate(transactions: ApiTransaction[]) {
+  const groups: Record<string, ApiTransaction[]> = {};
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  transactions.forEach((txn) => {
+    const date = new Date(txn.createdAt);
+    let label: string;
+    if (date.toDateString() === today.toDateString()) label = 'Today';
+    else if (date.toDateString() === yesterday.toDateString()) label = 'Yesterday';
+    else label = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    if (!groups[label]) groups[label] = [];
+    groups[label].push(txn);
+  });
+  return groups;
+}
 
 export default function TransactionsTab() {
-  const [filter, setFilter] = useState<Filter>('all');
-  const [selectedTxn, setSelectedTxn] = useState<any>(null);
+  const { token } = useAuth();
+  const [transactions, setTransactions] = useState<ApiTransaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<FilterType>('all');
+  const [selectedTxn, setSelectedTxn] = useState<ApiTransaction | null>(null);
 
-  const filteredTransactions = mockTransactions
-    .filter(t => t.status !== 'blocked')
-    .filter(t => filter === 'all' || t.paymentMethod === filter);
+  useEffect(() => {
+    if (!token) return;
+    fetch(`${API_BASE_URL}/transactions/my`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.json())
+      .then((data) => { if (data.success) setTransactions(data.data.transactions); })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [token]);
 
-  const groupByDate = (transactions: typeof mockTransactions) => {
-    const groups: { [key: string]: typeof mockTransactions } = {};
-
-    transactions.forEach(txn => {
-      const date = new Date(txn.timestamp);
-      const today = new Date();
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-
-      let label = '';
-      if (date.toDateString() === today.toDateString()) {
-        label = 'Today';
-      } else if (date.toDateString() === yesterday.toDateString()) {
-        label = 'Yesterday';
-      } else {
-        label = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-      }
-
-      if (!groups[label]) groups[label] = [];
-      groups[label].push(txn);
-    });
-
-    return groups;
-  };
-
-  const groupedTransactions = groupByDate(filteredTransactions);
+  const filtered = transactions.filter((t) => filter === 'all' || t.paymentMethod.type === filter);
+  const grouped = groupByDate(filtered);
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
